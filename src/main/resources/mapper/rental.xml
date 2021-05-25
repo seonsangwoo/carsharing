@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.car.sharing.mapper.RentalMapper">
+	
+	<!-- 예약하려는 시간에 같은 회원이 동일시간에 예약한 차량이 있는지 확인 -->
+	<select id="rentalcheck" resultType="int">
+		<![CDATA[
+			SELECT COUNT(*) FROM fo_rental
+			WHERE user_seq = #{userSeq} AND 
+			rental_time < DATE_ADD((#{returnTime}), INTERVAL 1 HOUR) AND 
+			return_time > DATE_SUB((#{rentalTime}), INTERVAL 1 HOUR) AND
+			reservation_status = 'cd1'
+		]]>	
+	</select>
+	
+
+	<!-- 검색버튼 클릭하여 좌표값 가져오기 -->
+	<select id="getlatlong" resultType="LocationVO">
+		SELECT * FROM FO_LOCATION
+	</select>
+	
+	<!-- 차량 상세 정보 리스트 가져오기 -->
+	<select id="getcarinfolist" resultType="CarLocationRentalVO">
+		<![CDATA[
+			SELECT * FROM 
+			(
+				SELECT 
+				fc.car_seq
+				,fc.car_no
+				,fc.location_code
+				,fc.car_kinds
+				,fc.car_img
+				,fc.car_oil
+				,fc.car_price
+				,fl.location_name
+				,fl.location_address
+				FROM FO_CAR fc JOIN FO_LOCATION fl
+				ON fc.location_code = fl.location_code
+				WHERE fc.location_code = #{locationCode} AND fc.car_status = 'cd1'
+			) cl 
+			LEFT JOIN
+			(
+				SELECT
+				fc.car_seq AS car_seq2
+				,fr.rental_no
+				,fr.rental_time
+				,fr.return_time
+				,(case when rental_time < #{returnTime} AND return_time > #{rentalTime} then 1 ELSE 0 END) AS rental_status
+				FROM FO_RENTAL fr JOIN FO_CAR fc
+				ON fr.car_seq = fc.car_seq
+				WHERE fc.location_code = #{locationCode} AND fr.reservation_status != 'cd2'
+				HAVING rental_status = 1
+			) rc
+			ON cl.car_seq=rc.car_seq2
+			GROUP BY cl.car_seq
+			ORDER BY rental_status ASC
+		]]>
+	</select>
+	
+	<!-- 차량 정보 가져오기 (결제 페이지) -->
+	<select id="getcarinfo" resultType="CarLocationRentalVO">
+		SELECT * FROM FO_CAR
+		WHERE car_seq = #{carSeq}	
+	</select>
+	
+	<!-- 차량 예약하기 -->
+	<insert id="payment">
+		INSERT INTO FO_RENTAL(rental_no, user_seq, car_seq, rental_time, return_time, rental_price)
+		VALUES (
+			#{rentalNo}
+			,#{userSeq}
+			,#{carSeq}
+			,#{rentalTime}
+			,#{returnTime}
+			,#{rentalPrice}
+		)
+	</insert>
+	
+	<!-- 차량 예약 불가능한 시간 보기 -->
+	<select id="impossibletime" resultType="RentalVO">
+		<![CDATA[
+			SELECT * FROM fo_rental
+			WHERE car_seq = #{carSeq} AND
+			rental_time < #{returnTime} AND
+			return_time > #{rentalTime} AND
+			reservation_status = 'cd1'
+		]]>
+	</select>
+	
+	
+	
+	
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.car.sharing.mapper.UserMapper">
+	
+	<!-- 회원가입 - 아이디 중복체크 -->
+	<select id="idCheck" resultType="int">
+		SELECT count(user_id) FROM FO_USER
+		WHERE user_id = #{userId}
+	</select>
+	
+	<!-- 회원가입 - 핸드폰번호 중복체크 -->
+	<select id="phoneCheck" resultType="int">
+		SELECT count(phone) FROM FO_USER
+		WHERE phone = #{phone}
+	</select>
+
+	<!-- 회원가입 - 면허증번호 중복체크 -->
+	<select id="licenseCheck" resultType="int">
+		SELECT count(licensenumber) FROM FO_USER
+		WHERE licensenumber = #{licensenumber}
+	</select>
+	
+	<!-- 회원가입 - 유저정보 insert -->
+	<insert id="joinUser">
+		INSERT INTO FO_USER(user_id, name, pw, address, phone, licensenumber)
+		VALUES(#{userId}, #{name}, #{pw}, #{address}, #{phone}, #{licensenumber})
+	</insert>
+	
+	<!-- 차량 예약 내역 가져오기 -->
+	<select id="reservationList" resultType="CarLocationRentalVO">
+		SELECT 
+		fr.rental_no
+		,fr.user_seq
+		,fr.car_seq
+		,fr.rental_time
+		,fr.return_time
+		,fr.rental_price
+		,fr.reservation_status
+		,fr.reservation_date
+		,fc.location_code
+		,fc.car_kinds
+		,fc.car_img
+		,fc.car_oil
+		,fl.location_name
+		,fl.latitude
+		,fl.longitude
+		FROM
+		fo_rental fr JOIN fo_car fc
+		ON fr.car_seq = fc.car_seq
+		JOIN fo_location fl
+		ON fc.location_code = fl.location_code
+		WHERE user_seq = #{userSeq} AND fr.reservation_status != "cd2"
+		ORDER BY rental_time DESC
+	</select>
+	
+	<update id="pwChange">
+		UPDATE FO_USER
+		SET pw = #{pw}
+		WHERE user_seq = #{userSeq}
+	</update>
+	
+	<update id="reservationCancel">
+		UPDATE FO_RENTAL
+		SET reservation_status = "cd2"
+		WHERE rental_no = #{rentalNo}
+	</update>
+	
+</mapper>
