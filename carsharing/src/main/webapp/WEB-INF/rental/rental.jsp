@@ -363,7 +363,6 @@
 					alert("반납할 수 있는 최소 시간은 "+nextYear+"년 "+nextMonth+"월 "+nextDate+"일 00시 입니다.");
 					$("#endtime").val("00");
 					$("#datepicker2").val(nextYear+"-"+nextMonth+"-"+nextDate);
-					$("#datepicker2").focus();
 				} else if (datediff == 4 && endtimeval > starttimeval && endtimeval !== "선택"){ //5일 이상 예약 불가
 					alert("5일 이상은 예약이 불가능합니다.");
 					$("#endtime").focus();
