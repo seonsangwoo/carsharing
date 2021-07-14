@@ -1,5 +1,7 @@
 package com.car.sharing.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -17,6 +19,16 @@ public class LoginController {
 	final Logger logger = LoggerFactory.getLogger(this.getClass()); // 로그확인
 
 	@Autowired LoginService loginService;
+	
+	//vue 데이터 테스트
+	@RequestMapping(value = "/test")
+	@ResponseBody
+	public ArrayList<UserVO> tset() throws Exception {
+		logger.info("테스트");
+		ArrayList<UserVO> result = loginService.test();
+		
+		return result;
+	}
 	
 	//기본 페이지
 	@RequestMapping(value="/")

@@ -1,5 +1,7 @@
 package com.car.sharing.service.impl;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -30,6 +32,13 @@ public class LoginServiceImpl implements LoginService{
 			return 1;
 		}
 		return 0;
+	}
+	
+	//vue 데이터 테스트
+	@Override
+	public ArrayList<UserVO> test() throws Exception {
+		// TODO Auto-generated method stub
+		return loginMapper.test();
 	}
 
 }

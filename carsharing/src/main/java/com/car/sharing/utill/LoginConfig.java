@@ -11,7 +11,7 @@ public class LoginConfig implements WebMvcConfigurer{
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new LoginInterceptor())
 		.addPathPatterns("/*")
-		.excludePathPatterns("/login", "/logincheck", "/policy", "/idcheck", "/phonecheck", "/licensecheck", "/joinuser", 
+		.excludePathPatterns("/test", "/login", "/logincheck", "/policy", "/idcheck", "/phonecheck", "/licensecheck", "/joinuser", 
 				"/signup", "/css/**", "/js/**");
 	}
 }

@@ -8,4 +8,9 @@
 		SELECT user_seq, user_id, pw, name, phone, address, licensenumber, join_date FROM FO_USER
 		WHERE user_id = #{userId} AND pw = #{pw}
 	</select>
+	
+	<!-- vue 데이터 테스트 -->
+	<select id="test" resultType="UserVO">
+		SELECT * FROM FO_USER
+	</select>
 </mapper>

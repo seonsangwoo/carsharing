@@ -9,7 +9,7 @@ public class UserVO {
 	private String phone;
 	private String address;
 	private String licensenumber;
-	private String joinString;
+	private String joinDate;
 	
 	public int getUserSeq() {
 		return userSeq;
@@ -53,17 +53,17 @@ public class UserVO {
 	public void setLicensenumber(String licensenumber) {
 		this.licensenumber = licensenumber;
 	}
-	public String getJoinString() {
-		return joinString;
+	public String getjoinDate() {
+		return joinDate;
 	}
-	public void setJoinString(String joinString) {
-		this.joinString = joinString;
+	public void setjoinDate(String joinDate) {
+		this.joinDate = joinDate;
 	}
 	
 	@Override
 	public String toString() {
 		return "UserVO [userSeq=" + userSeq + ", userId=" + userId + ", pw=" + pw + ", name=" + name + ", phone="
-				+ phone + ", address=" + address + ", licensenumber=" + licensenumber + ", joinString=" + joinString
+				+ phone + ", address=" + address + ", licensenumber=" + licensenumber + ", joinDate=" + joinDate
 				+ "]";
 	}
 	
